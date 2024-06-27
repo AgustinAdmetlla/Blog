@@ -109,18 +109,153 @@ por primera creacion:
       return self.title
 
 
+---- SE DEBEN CARGAR LOS MODELOS A DJANGO ----
+python manage.py makemigration
 
 
 
+* REGISTRAR MODELOS PARA SER USADOS POR USUARIOS:
+    Dentro del directorio 'blog', se trabaja sobre el modulo 'admin':
+  
+
+* CREACION SUPERUSUARIO para CREAR POST:
+    En la terminal se ejecuta el comando:
+  python manage.py createsuperuser
+
+    Para esta app se crea:
+    - username: admin
+    - email address: adim@email.com 
+    - password: 12345677
 
 
+* SERIALIZACION/TRANSFORMACION OBJETOS/INFORMACION en BD a FORMATO JSON:
+    Dentro del directorio 'blog' se crea un nuevo modulo llamado 
+'serializers.py'. Se debe importar tambien, el modelo a serializar:
+
+  from rest_framework import serializers
+  from .models import Post
+
+    class PostSerializer(serializer.ModelSerializer):
+         class Meta:
+            model = Post
+            fields = (
+                'id',
+                'title', 
+                'thumbnail',
+                'excerpt',
+                'content',
+                'published',
+                'author',
+                'status',
+                'slug',
+           )
 
 
+* CREACION de VISTAS:
+    Se creara una vista que liste todos los Posts, y otra vista para mostrar
+los detalles de cada uno: 
+    from rest_framework.views import APIView
+    from rest_framework.response import Response
+    from .models import Post
+    from .serializers import PostSerializer
 
 
+    class BlogListView(APIView):
+        def get(self, request, *args, **kwargs):
+            posts = Post.objects.all -> consulta para retornar Posts incluso si son privados
+            posts = Post.postobjects.all() -> devuelve solo los Posts publicos o indicados en el metodo PostObjects
+
+            serializer = Post(posts, many=True) -> many=True indica que seran muchos elementos
+
+            return Response()
+
+    class PostDetailView(APIView):
+
+        def get(self, request, post_slug, *args, **kwargs):
+            post = get_object_or_404(Post, slug=post_slug)
+            serializer = PostSerializer(post)
+            return Response(serializer.data)
 
 
+* AGREGAR VISTAS URL:
+    En el directorio de 'blog' se crea el modulo 'urls.py':
+    from django.urls import path
 
+    app_name = 'blog'
+    urlpatterns = [ -> se crea la ruta hacia los modulos/vistas que pertenecen a 'blog'
+        
+    ]
+
+    Una vez creado el modulo, se debe agregar el path de views de 'blog'
+al urlpatterns de 'core'. esto se hace para indicarle a la aplicacion las rutas
+de las distintas app que usamos.
+
+
+#########################################################################
+#                                                                       #
+#                     IMPLEMENTACION FRONTEND VUE                       #
+#                                                                       #
+#########################################################################
+
+    Para iniciar VUE hay que estar ubicados en el directorio que contiene a 
+'backend' y ejecutar el comando:
+  vue create frontend
+
+    Luego se debe instalar 'tailwind' ubicandome en el directorio de 'frontend':
+  vue add tailwind
+
+   Siguiendo dentro del directorio 'frontend' ejecuto el comando que inicia el 
+servidor npm:
+  npm run serve
+
+* CREACION NAVEGACION en VUE:
+    Dentro del directorio de 'frontend/src/views' creo un modulo llamado 
+'Blog.vue'. Una vez creado el modulo, debo agregar la ruta de la imagen al 
+modulo 'index' ubicado en el directorio 'router' de 'frontend/src'.
+    Se debe modicar 'const routes'
+
+- 'Blog.vue':
+    <template>
+    <div>
+        <h1>This is a Blog view</h1>
+    </div>
+    </template>
+
+- 'index.js':
+    const routes = [
+        {
+            path: '/',
+            name: 'home',
+            component: HomeView
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+        },
+        {
+            path: '/blog',
+            name: 'Blog',
+            component: () => import(/* webpackChunkName: "about" */ '../views/Blog.vue')
+        }
+    ]
+
+    Creado y agregado la vista, hay que poder acceder a ella. Para eso se debe
+modificar el modulo 'App.vue' de 'frontend/src' y agregar un 'router link'
+que es similar a agregar 'blog' al path de 'core'.
+
+- 'App.vue':
+    <template>
+    <nav>
+        <router-link to="/">Home</router-link> |
+        <router-link to="/about">About</router-link> |
+        <router-link to="/blog">Blog</router-link>
+    </nav>
+    <router-view />
+    </template>
+
+* AGREGAR VISTAS para los POSTS:
+    
 
 
 
