@@ -240,6 +240,23 @@ modulo 'index' ubicado en el directorio 'router' de 'frontend/src'.
         }
     ]
 
+    Creado y agregado la vista, hay que poder acceder a ella. Para eso se debe
+modificar el modulo 'App.vue' de 'frontend/src' y agregar un 'router link'
+que es similar a agregar 'blog' al path de 'core'.
+
+- 'App.vue':
+    <template>
+    <nav>
+        <router-link to="/">Home</router-link> |
+        <router-link to="/about">About</router-link> |
+        <router-link to="/blog">Blog</router-link>
+    </nav>
+    <router-view />
+    </template>
+
+* AGREGAR VISTAS para los POSTS:
+    
+
 
 
 
