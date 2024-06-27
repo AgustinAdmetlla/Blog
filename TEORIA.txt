@@ -150,9 +150,43 @@ python manage.py makemigration
                 'slug',
            )
 
-    
+
+* CREACION de VISTAS:
+    Se creara una vista que liste todos los Posts, y otra vista para mostrar
+los detalles de cada uno: 
+    from rest_framework.views import APIView
+    from rest_framework.response import Response
+    from .models import Post
+    from .serializers import PostSerializer
 
 
+    class BlogListView(APIView):
+        def get(self, request, *args, **kwargs):
+            posts = Post.objects.all -> consulta para retornar Posts incluso si son privados
+            posts = Post.postobjects.all() -> devuelve solo los Posts publicos o indicados en el metodo PostObjects
+
+            serializer = Post(posts, many=True) -> many=True indica que seran muchos elementos
+
+            return Response()
+
+    class PostDetailView(APIView):
+
+        def get(self, request, post_slug, *args, **kwargs):
+            post = get_object_or_404(Post, slug=post_slug)
+            serializer = PostSerializer(post)
+            return Response(serializer.data)
+
+
+* AGREGAR VISTAS URL:
+    En el directorio de 'blog' se crea el modulo 'urls.py':
+    from django.urls import path
+
+    app_name = 'blog'
+    urlpatterns = [
+        
+    ]
+
+    Una vez creado el modulo, se debe
 
 
 
