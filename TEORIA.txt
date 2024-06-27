@@ -1,0 +1,131 @@
+* ALMACENAMIENTO DE IMAGENES:
+    Primero se debe indicar donde se va a guardar la imagen.
+
+  def user_directory_path(instance, filename):
+      return 'blog/{0}/{1}'.format(instance.title, filename)
+
+    Las imagnes se van a guardar en una carpeta llamda blog donde {0} hace 
+referencia a la instancia de 'title' y {1} hace referencia al nombre de la
+imagen.
+
+  class Post(models.Model):
+        title = models.CharField(max_length=250)
+        thumbnail = models.ImageField(
+            upload_to = user_directory_path, 
+            default = 'blog/default.jpg'
+        )
+
+    thumbnail -> default es para cuando no se carga una imagen. En caso de no 
+necesitar una imagen por default, se borra el parametro y se lo cambia por:
+  blank = True
+
+  class Post(models.Model):
+        title = models.CharField(max_length=250)
+        thumbnail = models.ImageField(
+            upload_to = user_directory_path, 
+            #default = 'blog/default.jpg'
+            blank = True,
+            null = True
+        )
+        excerpt = models.TextField(null=True)
+        content = models.TextField()
+        # slug es para agregar contenido
+        slug = models.SlugField(
+            max_length=250, 
+            unique_for_date='published',
+            null = False,
+            unique = True
+        )
+
+    - slug -> es para agregar el contenido al post. 
+    - slug(unique_for_date=xxx) -> hace referencia al modelo.
+    - slug(null=Flase, unique=True) -> como se quiere que los slug siempre sean.
+creados, se debe mantener esa configuracion para que sean unicos y diferentes
+cada uno con su url.
+
+
+* VINCULAR POST con USUARIOS:
+    En el modulo 'models.py' de 'blog' agrego:
+
+  from django.contrib.auth.models import User
+
+  author = models.ForeignKey(
+      User, 
+      on_delete = models.CASCADE,
+      related_name = 'post_user'
+  )
+
+    -- on_delete = models.CASCADE -> indica que cuando el usuario sea borrado 
+se borren tambien los datos relacionados a él.
+
+    - related_name = 'post_user' -> se le da un nombre al atributo para ser 
+llamado cuando se trabajen las vistas.
+
+
+* CONFIGURACION de VISUALIZACION(publico/privado), EDICION, etc:
+    En la clase Post se debe agregar el atributo y la lista de opciones.
+    
+  options = [
+      ('draft', 'Draft), -> solo el usuario podra ver su/sus post/s
+      ('published', 'Published), -> publicaciones publicas
+  ]
+
+   
+  class Post(models.Model):
+      status = models.CharField(
+          max_length = 10, 
+          choices = options, 
+          default = 'draft'
+      )
+
+
+* MANIPULACION de OBJETO SEGUN CONF. VISUALIZACION:
+    En la clase Post se debe agregar el atributo y la lista de opciones.
+Para hacer referencia a un objeto de una base de datos, se utiliza el atributo
+'objects'. que hereda el funcionamiento desde una nueva clase interna de Post
+'class PostObjects(models.Manager)'. 
+    Dicha clase usara una funcion de 'queryset' que permite filtrar el 
+'status' de 'published':
+
+  class PostObjects(models.Manager):
+      def get_wueryset(self):
+          return super().get_queryset().filter(status='published)
+
+  objects = models.Manager()
+  postobjects = PostObjects()
+
+
+* ORDENAMIENTO VISUAL de POSTs:
+    Se debe crear una sub clase en la clase 'Post' llamada 'Meta'. Se ordena 
+por primera creacion:
+
+  class Meta:
+      ordering = ('-published', )
+
+* VISUALIZAR CORRECTAMENTE los POSTs en la BD:
+    En la clase 'Post' se define el metodo:
+  
+  def __str__(self):
+      return self.title
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
