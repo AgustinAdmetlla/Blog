@@ -114,7 +114,43 @@ python manage.py makemigration
 
 
 
+* REGISTRAR MODELOS PARA SER USADOS POR USUARIOS:
+    Dentro del directorio 'blog', se trabaja sobre el modulo 'admin':
+  
 
+* CREACION SUPERUSUARIO para CREAR POST:
+    En la terminal se ejecuta el comando:
+  python manage.py createsuperuser
+
+    Para esta app se crea:
+    - username: admin
+    - email address: adim@email.com 
+    - password: 12345677
+
+
+* SERIALIZACION/TRANSFORMACION OBJETOS/INFORMACION en BD a FORMATO JSON:
+    Dentro del directorio 'blog' se crea un nuevo modulo llamado 
+'serializers.py'. Se debe importar tambien, el modelo a serializar:
+
+  from rest_framework import serializers
+  from .models import Post
+
+    class PostSerializer(serializer.ModelSerializer):
+         class Meta:
+            model = Post
+            fields = (
+                'id',
+                'title', 
+                'thumbnail',
+                'excerpt',
+                'content',
+                'published',
+                'author',
+                'status',
+                'slug',
+           )
+
+    
 
 
 

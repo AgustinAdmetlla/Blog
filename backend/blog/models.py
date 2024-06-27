@@ -16,8 +16,9 @@ class Post(models.Model):
     class Meta:
         ordering = ('-published', )
 
+    def __str__(self):
+      return self.title
     
-
     options = [
         ('draft', 'Draft'),
         ('published', 'Published'),
@@ -33,7 +34,7 @@ class Post(models.Model):
     excerpt = models.TextField(null=True)
     content = models.TextField()
     published = models.DateTimeField(default=timezone.now)
-    # slug es para agregar contenido
+    # slug es para indicar la url
     slug = models.SlugField(
             max_length=250, 
             unique_for_date='published',
