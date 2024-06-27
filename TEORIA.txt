@@ -1,0 +1,67 @@
+* ALMACENAMIENTO DE IMAGENES:
+    Primero se debe indicar donde se va a guardar la imagen.
+
+  def user_directory_path(instance, filename):
+      return 'blog/{0}/{1}'.format(instance.title, filename)
+
+    Las imagnes se van a guardar en una carpeta llamda blog donde {0} hace 
+referencia a la instancia de 'title' y {1} hace referencia al nombre de la
+imagen.
+
+  class Post(models.Model):
+        title = models.CharField(max_length=250)
+        thumbnail = models.ImageField(
+            upload_to = user_directory_path, 
+            default = 'blog/default.jpg'
+        )
+
+    thumbnail -> default es para cuando no se carga una imagen. En caso de no 
+necesitar una imagen por default, se borra el parametro y se lo cambia por:
+  blank = True
+
+  class Post(models.Model):
+        title = models.CharField(max_length=250)
+        thumbnail = models.ImageField(
+            upload_to = user_directory_path, 
+            #default = 'blog/default.jpg'
+            blank = True,
+            null = True
+        )
+        excerpt = models.TextField(null=True)
+        content = models.TextField()
+        # slug es para agregar contenido
+        slug = models.SlugField(max_length=250, unique_for_date='published')
+
+    slug -> es para agregar el contenido al post. 
+    slug(unique_for_date=xxx) -> hace referencia al modelo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
