@@ -255,7 +255,53 @@ que es similar a agregar 'blog' al path de 'core'.
     </template>
 
 * AGREGAR VISTAS para los POSTS:
-    
+    Se trabaja con css en el modulo 'Blog.vue'.
+
+* COMUNICACION VUE y DJANGO:
+    Se utiliza vue-axios, el comando a ejecutar debe ser dentro del directorio 'frontend':
+npm i vue-axios
+
+* EJECUTAR AXIOS: 
+    En 'core/settings.py' se debe haber creado el vinculo con 'corsheader' en 
+'INSTALLED_APPS'
+    Se debe crear un nuevo archivo dentro de 'frontend/src' con el nombre de:
+'axios-api.js':
+
+- 'axios-api.js':
+    import axios from 'axios'
+
+    const getAPI = axios.create(
+        {
+            baseURL: 'http.//127.0.0.1:8000',
+            timeout: 1000,
+        }
+    )
+
+    export { getAPI }
+
+    Dentro de 'Blog.vue' se debe dar forma a 'APIData'. Debajo de todo agrega:
+<script>
+import { getAPI } from '../axios-api'
+
+export default {
+  name: 'Blog',
+  data() {
+    return {
+      APIData: []
+    }
+  },
+  created() {
+    getAPI.get('blog/posts/',) -> se indica la url o endpoint de donde se van a extraer los datos
+      .then(response => {
+        console.log('Post API has received data')
+        this.APIData = response.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+}
+</script>
 
 
 
