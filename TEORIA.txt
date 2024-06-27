@@ -182,11 +182,13 @@ los detalles de cada uno:
     from django.urls import path
 
     app_name = 'blog'
-    urlpatterns = [
+    urlpatterns = [ -> se crea la ruta hacia los modulos/vistas que pertenecen a 'blog'
         
     ]
 
-    Una vez creado el modulo, se debe
+    Una vez creado el modulo, se debe agregar el path de views de 'blog'
+al urlpatterns de 'core'. esto se hace para indicarle a la aplicacion las rutas
+de las distintas app que usamos.
 
 
 
