@@ -11,7 +11,7 @@ urlpatterns = [
 ]
 
 # se llaman a las urls de 'rest_framework'
-if settings.DEGUB:
+if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, 
         document_root=settings.MEDIA_ROOT

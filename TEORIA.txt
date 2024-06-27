@@ -109,7 +109,8 @@ por primera creacion:
       return self.title
 
 
-
+---- SE DEBEN CARGAR LOS MODELOS A DJANGO ----
+python manage.py makemigration
 
 
 
